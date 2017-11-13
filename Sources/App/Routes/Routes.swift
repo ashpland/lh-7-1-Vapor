@@ -7,7 +7,22 @@ extension Droplet {
             try json.set("hello", "world")
             return json
         }
+        
+        post("betterhello") { req in
+           
+            guard let name = req.data["name"]?.string else {
+                throw Abort(.badRequest)
+            }
 
+            let decor = String.randomEmoji
+
+            return "\(decor) \(name) \(decor)"
+            
+            
+        }
+
+        
+        
         get("plaintext") { req in
             return "Hello, swift!\n "
         }
@@ -44,5 +59,14 @@ extension Droplet {
         get("description") { req in return req.description }
         
         try resource("posts", PostController.self)
+    }
+}
+
+extension String{
+    static var randomEmoji: String {
+        let range = [UInt32](0x1F601...0x1F64F)
+        let ascii = range[Int(drand48() * (Double(range.count)))]
+        let emoji = UnicodeScalar(ascii)?.description
+        return emoji!
     }
 }
