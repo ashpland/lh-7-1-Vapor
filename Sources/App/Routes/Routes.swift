@@ -9,8 +9,23 @@ extension Droplet {
         }
 
         get("plaintext") { req in
-            return "Hello, world!"
+            return "Hello, swift!\n "
         }
+        
+        get("uppercase", ":lowercase") { req in
+            guard let lowercase = req.parameters["lowercase"]?.string else {
+                return "Error retrieving parameters\n"
+            }
+            return lowercase.uppercased()
+        }
+        
+        get("name", ":x") { req in
+            guard let name = req.parameters["x"]?.string else {
+                return "Error retrieving parameters\n"
+            }
+            return "Hello \(name)\n"
+        }
+        
 
         // response to requests to /info domain
         // with a description of the request
