@@ -1,17 +1,32 @@
 import Vapor
+import Foundation
 
 extension Droplet {
     func setupRoutes() throws {
         
         
         post("store") { req in
-            let dataToStore = req.storage
+            do {
+                if let jsonBytes = try req.json?.serialize() {
+                    let jsonData : Data = Data(bytes: jsonBytes)
+                    // convert ^ to array, I guess
+                }
+                
+                
+                
+            } catch {
+                
+            }
             
+            
+            
+            
+
             let store = Store()
             store.add(dataToStore)
-            
-            
-            
+
+
+
             return store.internalStore.description
 
         }
