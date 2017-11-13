@@ -16,9 +16,7 @@ extension Droplet {
 
             let decor = String.randomEmoji
 
-            return "\(decor) \(name) \(decor)"
-            
-            
+            return "\(decor) \(name) \(decor)" 
         }
 
         
