@@ -2,6 +2,26 @@ import Vapor
 
 extension Droplet {
     func setupRoutes() throws {
+        
+        
+        post("store") { req in
+            let dataToStore = req.storage
+            
+            Store().add(dataToStore)
+            
+            
+            
+            return "yo"
+
+        }
+        
+        
+        
+        
+        
+        
+        
+        
         get("hello") { req in
             var json = JSON()
             try json.set("hello", "world")
@@ -18,6 +38,11 @@ extension Droplet {
 
             return "\(decor) \(name) \(decor)" 
         }
+        
+        
+        
+        
+        
 
         
         
