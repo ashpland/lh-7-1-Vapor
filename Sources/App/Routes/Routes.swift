@@ -7,11 +7,12 @@ extension Droplet {
         post("store") { req in
             let dataToStore = req.storage
             
-            Store().add(dataToStore)
+            let store = Store()
+            store.add(dataToStore)
             
             
             
-            return "yo"
+            return store.internalStore.description
 
         }
         
