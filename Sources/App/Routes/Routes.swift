@@ -12,19 +12,27 @@ extension Droplet {
             return "Hello, swift!\n "
         }
         
-        get("uppercase", ":lowercase") { req in
+        get("simpleuppercase", ":lowercase") { req in
             guard let lowercase = req.parameters["lowercase"]?.string else {
                 return "Error retrieving parameters\n"
             }
             return lowercase.uppercased()
         }
         
-        get("name", ":x") { req in
-            guard let name = req.parameters["x"]?.string else {
+        get("uppercase") { req in
+            guard let lowercase = req.data["lowercase"]?.string else {
                 return "Error retrieving parameters\n"
             }
-            return "Hello \(name)\n"
+            return lowercase.uppercased() + "\n"
         }
+        
+        get("greet") { req in
+            guard let value = req.data["name"]?.string else {
+                return "Error retrieving parameters\n"
+            }
+            return "Hello \(value)\n"
+        }
+        
         
 
         // response to requests to /info domain
