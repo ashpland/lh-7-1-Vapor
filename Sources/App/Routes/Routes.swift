@@ -14,19 +14,28 @@ extension Droplet {
             do {
                 if let jsonBytes = try req.json?.serialize() {
                     let jsonData : Data = Data(bytes: jsonBytes)
-                    // convert ^ to array, I guess
                     if let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String : Any] {
                         itemsStored = store.add(jsonObject)
                     }
                 }
             } catch {
-                return "Some error"
+                return "Something went wrong with the JSON"
             }
             
             let itemsStoredString: String = itemsStored?.description ?? "no"
             
             return "Stored \(itemsStoredString) items"
         }
+        
+        get("lookup", ":key") { req in
+            guard let key = req.parameters["key"]?.string else {
+                return "Error retrieving parameters\n"
+            }
+            return Store.sharedInstance.get(key: key) ?? "No value"
+        }
+        
+        
+        
       
         
         get("hello") { req in

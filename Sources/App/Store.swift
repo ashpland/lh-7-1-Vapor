@@ -22,25 +22,23 @@ class Store {
         return nil
     }
     
+    
     let ifString: (Dictionary<String, Any>.Element) -> Bool = {
         element in
             return element.value as? String != nil
     }
+    
     
     func chooseNew<T> () -> (T, T) -> T {
         return { (_, new) in new }
     }
     
     
-    
-    
-    func add(value: String, key: String) {
-        internalStore.updateValue(value, forKey: key)
-    }
-    
     func get(key: String) -> String? {
         return internalStore[key]
     }
+    
+    
     
     
 }
