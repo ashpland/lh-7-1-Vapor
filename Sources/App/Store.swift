@@ -6,16 +6,20 @@
 //
 
 class Store {
+    static let sharedInstance = Store()
+    
     var internalStore = [String:String]()
     
     init() {
        
     }
     
-    func add(_ inputDictionary:[String:Any]) {
+    func add(_ inputDictionary:[String:Any]) -> Int? {
         if let sanitizedDictionary = inputDictionary.filter(ifString) as? [String : String] {
             internalStore.merge(sanitizedDictionary, uniquingKeysWith:chooseNew())
+            return sanitizedDictionary.count
         }
+        return nil
     }
     
     let ifString: (Dictionary<String, Any>.Element) -> Bool = {

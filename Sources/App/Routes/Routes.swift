@@ -6,37 +6,28 @@ extension Droplet {
         
         
         post("store") { req in
+            
+            let store = Store.sharedInstance
+            var itemsStored: Int?
+            
+            
             do {
                 if let jsonBytes = try req.json?.serialize() {
                     let jsonData : Data = Data(bytes: jsonBytes)
                     // convert ^ to array, I guess
+                    if let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String : Any] {
+                        itemsStored = store.add(jsonObject)
+                    }
                 }
-                
-                
-                
             } catch {
-                
+                return "Some error"
             }
             
+            let itemsStoredString: String = itemsStored?.description ?? "no"
             
-            
-            
-
-            let store = Store()
-            store.add(dataToStore)
-
-
-
-            return store.internalStore.description
-
+            return "Stored \(itemsStoredString) items"
         }
-        
-        
-        
-        
-        
-        
-        
+      
         
         get("hello") { req in
             var json = JSON()
