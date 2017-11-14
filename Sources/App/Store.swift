@@ -7,36 +7,27 @@
 
 import Foundation
 
-class Store : NSObject, NSCoding {
-    
+class Store {
     
     static let sharedInstance = Store()
     
-    private var internalStore = [String:String]()
-    
-    override init() {
+    private static var internalStore: [String:String] {
+        get {
+            if let data = UserDefaults.standard.object(forKey: "internalStore") as? Data {
+                if let decodedInternalStore = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String:String] {
+                    return decodedInternalStore
+                }
+            }
+            return [String:String]()
+        }
         
+        set(updatedDictionary) {
+            let data = NSKeyedArchiver.archivedData(withRootObject: updatedDictionary as Any)
+            UserDefaults.standard.set(data, forKey: "internalStore")
+        }
     }
     
-    convenience init(withDictionary: [String:String]) {
-        self.init()
-        self.internalStore = withDictionary
-    }
-    
-    
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(internalStore, forKey: "internalStore")
-    }
-    
-    required convenience init?(coder aDecoder: NSCoder) {
-        guard let internalStore = aDecoder.decodeObject(forKey: "internalStore") as? [String:String]
-            else {return nil}
-        self.init(withDictionary: internalStore)
-    }
-    
-    
-    func add(_ inputDictionary:[String:Any]) -> Int? {
+    static func add(_ inputDictionary:[String:Any]) -> Int? {
         if let sanitizedDictionary = inputDictionary.filter(ifString) as? [String : String] {
             internalStore.merge(sanitizedDictionary, uniquingKeysWith:chooseNew())
             return sanitizedDictionary.count
@@ -44,23 +35,22 @@ class Store : NSObject, NSCoding {
         return nil
     }
     
-    
-    let ifString: (Dictionary<String, Any>.Element) -> Bool = {
+    private static let ifString: (Dictionary<String, Any>.Element) -> Bool = {
         element in
-            return element.value as? String != nil
+        return element.value as? String != nil
     }
     
-    
-    func chooseNew<T> () -> (T, T) -> T {
+    private static func chooseNew<T> () -> (T, T) -> T {
         return { (_, new) in new }
     }
     
-    
-    func get(key: String) -> String? {
+    static func get(key: String) -> String? {
         return internalStore[key]
     }
     
-    
-    
-    
+    static func getAllItems() -> [String:String] {
+        return internalStore
+    }
 }
+
+
